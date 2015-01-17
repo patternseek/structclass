@@ -1,0 +1,21 @@
+{
+    "name": "patternseek/structclass",
+    "type": "library",
+    "description": "The Patternseek structclass library",
+    "keywords": ["library"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tolan Blundell",
+            "email": "tolan@patternseek.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "PatternSeek\\StructClass\\": "lib"
+        }
+    }
+}

@@ -36,7 +36,8 @@ class StructClass
 
     /**
      * Populate the StructClass's properties from an array
-     * @param array $properties
+     * @param StructClass $properties
+     * @return
      */
     static function fromArray( array $properties ){
         $selfClass = get_called_class();

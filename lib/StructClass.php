@@ -69,7 +69,13 @@ class StructClass
             $errs = 'Invalid properties in '.get_called_class()."\n";
             /** @var \Symfony\Component\Validator\ConstraintViolationInterface $issue */
             foreach( $violations as $issue ){
-                $errs .= $issue->getPropertyPath()." : ".$issue->getMessage()."\n";
+                $errs .=
+                    $issue->getPropertyPath()
+                    ." : "
+                    .$issue->getMessage()
+                    ." but got "
+                    .$issue->getInvalidValue()
+                    ." (".gettype($issue->getInvalidValue()).")\n";
             }
             throw new \Exception( $errs );
         }

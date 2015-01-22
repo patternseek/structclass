@@ -13,6 +13,10 @@ namespace PatternSeek\StructClass;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Validator\Validation;
 
+/**
+ * Class StructClass
+ * @package PatternSeek\StructClass
+ */
 class StructClass
 {
 
@@ -55,6 +59,10 @@ class StructClass
         return $obj;
     }
 
+    /**
+     * Validate class using annotations
+     * @throws \Exception
+     */
     function validate(){
         if( ! defined( "structclass-AnnotationRegistry-initilised" )){
             define( "structclass-AnnotationRegistry-initilised", true );
@@ -65,6 +73,7 @@ class StructClass
             ->getValidator();
 
         $violations = $validator->validate($this);
+        $errs = '';
         if( $violations->count() > 0 ){
             $errs = 'Invalid properties in '.get_called_class()."\n";
             /** @var \Symfony\Component\Validator\ConstraintViolationInterface $issue */
@@ -73,10 +82,32 @@ class StructClass
                     $issue->getPropertyPath()
                     ." : "
                     .$issue->getMessage()
-                    ." but got "
-                    .$issue->getInvalidValue()
-                    ." (".gettype($issue->getInvalidValue()).")\n";
+                    . " But got "
+                    . var_export( $issue->getInvalidValue(), true );
+                //. " (" . gettype( $issue->getInvalidValue() ) . ").\n";
             }
+        }
+        // Validate any properties which are StructClasses or are arrays containing StructClasses
+        foreach ($this as $property) {
+            if ($property instanceof StructClass) {
+                try{
+                    $property->validate();
+                }catch( \Exception $e ){
+                    $errs .= $e->getMessage();
+                }
+            }elseif (is_array( $property )) {
+                foreach ($property as $element) {
+                    if ($element instanceof StructClass) {
+                        try{
+                            $element->validate();
+                        }catch( \Exception $e ){
+                            $errs .= $e->getMessage();
+                        }
+                    }
+                }
+            }
+        }
+        if ($errs != '') {
             throw new \Exception( $errs );
         }
     }

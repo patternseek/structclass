@@ -10,6 +10,9 @@
 
 namespace PatternSeek\StructClass;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Symfony\Component\Validator\Validation;
+
 class StructClass
 {
 
@@ -36,16 +39,40 @@ class StructClass
 
     /**
      * Populate the StructClass's properties from an array
-     * @param $properties
+     * @param array $properties
+     * @param bool $discardInvalidEntries If set to true, entries in $properties for which there is no corresponding class member will be discarded instead of generating an error
      * @return StructClass
      */
-    static function fromArray( array $properties ){
+    static function fromArray( array $properties, $discardInvalidEntries=false ){
         $selfClass = get_called_class();
         $obj = new $selfClass();
         foreach( $properties as $property=>$value ){
+            if( (! property_exists( get_called_class(), $property ) ) && $discardInvalidEntries ){
+                continue;
+            }
             $obj->$$property = $value;
         }
         return $obj;
+    }
+
+    function validate(){
+        if( ! defined( "structclass-AnnotationRegistry-initilised" )){
+            define( "structclass-AnnotationRegistry-initilised", true );
+            AnnotationRegistry::registerLoader(function ($class) {return class_exists($class);});
+        }
+        $validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
+
+        $violations = $validator->validate($this);
+        if( $violations->count() > 0 ){
+            $errs = 'Invalid properties in '.get_called_class()."\n";
+            /** @var \Symfony\Component\Validator\ConstraintViolationInterface $issue */
+            foreach( $violations as $issue ){
+                $errs .= $issue->getPropertyPath()." : ".$issue->getMessage()."\n";
+            }
+            throw new \Exception( $errs );
+        }
     }
 
 }

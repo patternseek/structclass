@@ -54,7 +54,7 @@ class StructClass
             if( (! property_exists( get_called_class(), $property ) ) && $discardInvalidEntries ){
                 continue;
             }
-            $obj->$$property = $value;
+            $obj->$property = $value;
         }
         return $obj;
     }

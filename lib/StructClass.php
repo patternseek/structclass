@@ -11,13 +11,14 @@
 namespace PatternSeek\StructClass;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use JsonSerializable;
 use Symfony\Component\Validator\Validation;
 
 /**
  * Class StructClass
  * @package PatternSeek\StructClass
  */
-class StructClass
+class StructClass implements JsonSerializable
 {
 
     /**
@@ -57,6 +58,30 @@ class StructClass
             $obj->$property = $value;
         }
         return $obj;
+    }
+
+    /**
+     * Convert to an array.
+     * This will include any protected or private properties as well as public.
+     * Normally this shouldn't be an issue as struct classes are usually
+     * intended to have all members public.
+     */
+    public function toArray()
+    {
+        $ret = [ ];
+        foreach ($this as $key => $value) {
+            $ret[ $key ] = $value;
+        }
+        return $ret;
+    }
+
+    /**
+     * Implement JsonSerializable
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**

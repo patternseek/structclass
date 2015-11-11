@@ -12,9 +12,9 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/validator": "*",
-        "doctrine/annotations": "*",
-        "doctrine/cache": "*"
+        "symfony/validator": "2.7.*",
+        "doctrine/annotations": "1.2.*",
+        "doctrine/cache": "1.5.*"
     },
     "autoload": {
         "psr-4": {

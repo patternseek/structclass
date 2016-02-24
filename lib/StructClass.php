@@ -48,7 +48,8 @@ class StructClass implements JsonSerializable
      * @param bool $discardInvalidEntries If set to true, entries in $properties for which there is no corresponding class member will be discarded instead of generating an error
      * @return StructClass
      */
-    static function fromArray( array $properties, $discardInvalidEntries=false ){
+    public static function fromArray( array $properties, $discardInvalidEntries = false )
+    {
         $selfClass = get_called_class();
         $obj = new $selfClass();
         foreach( $properties as $property=>$value ){
@@ -88,7 +89,8 @@ class StructClass implements JsonSerializable
      * Validate class using annotations
      * @throws \Exception
      */
-    function validate(){
+    public function validate()
+    {
         if( ! defined( "structclass-AnnotationRegistry-initilised" )){
             define( "structclass-AnnotationRegistry-initilised", true );
             AnnotationRegistry::registerLoader(function ($class) {return class_exists($class);});
@@ -109,7 +111,6 @@ class StructClass implements JsonSerializable
                     .$issue->getMessage()
                     . " But got "
                     . var_export( $issue->getInvalidValue(), true );
-                //. " (" . gettype( $issue->getInvalidValue() ) . ").\n";
             }
         }
         // Validate any properties which are StructClasses or are arrays containing StructClasses

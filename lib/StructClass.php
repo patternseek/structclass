@@ -10,9 +10,9 @@
 
 namespace PatternSeek\StructClass;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use JsonSerializable;
 use Symfony\Component\Validator\Validation;
+
 
 /**
  * Class StructClass
@@ -91,14 +91,7 @@ class StructClass implements JsonSerializable
      */
     public function validate()
     {
-        if( ! defined( "structclass-AnnotationRegistry-initilised" )){
-            define( "structclass-AnnotationRegistry-initilised", true );
-            AnnotationRegistry::registerLoader(function ($class) {return class_exists($class);});
-        }
-        $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
-
+        $validator = Validation::createValidatorBuilder()->addDefaultDoctrineAnnotationReader()->enableAnnotationMapping()->getValidator();
         $violations = $validator->validate($this);
         $errs = '';
         if( $violations->count() > 0 ){

@@ -11,10 +11,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "symfony/validator": "2.7.*",
-        "doctrine/annotations": "1.2.*",
-        "doctrine/cache": "1.5.*"
+        "php": ">=7.3",
+        "symfony/validator": "5.*",
+        "symfony/cache": "5.*",
+        "doctrine/annotations": "2.*",
+        "doctrine/cache": "2.*"
     },
     "autoload": {
         "psr-4": {
